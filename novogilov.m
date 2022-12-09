@@ -8,11 +8,13 @@ k2 = 1;
 k3 = 0.5;  
 k4 = 0.3;
 k5 = 1;
+kf = 0.25;
 
 T0 = 2;
 T2 = 0.1;
 T3 = 100;
 T4 = 0.5;
+Tf = 0.8;
 
 t0 = 20;
 t2 = 0.2;
@@ -25,6 +27,7 @@ W3_pi = tf ([(k3*T3) k3],[T3 0]);
 W3_pid = tf ([(k3*t3*T3) (k3*T3) k3],[T3 0]);
 W4 = tf (k4, [T4 1 0]);
 W5 = tf (k5);
+Wf = tf (kf, [Tf 1])
 
 Wraz = W0 * W1 * W2 * W4 * W5;
 Wzam = feedback(Wraz, 1);
@@ -58,7 +61,7 @@ Wvozm = Wf/(1+Wraz); % предел по ошибке равен 0
 
 % ПИ регулятор
 Wraz_pi_reg = W0 * W1 * W2 * W3_pi * W4 * W5;
-Wzam_pi_reg = feedback(Wraz_pi_reg, 1)
+Wzam_pi_reg = feedback(Wraz_pi_reg, 1);
 Wmist_pi_reg = 1 / (1+Wraz_pi_reg);
 
 % figure
@@ -71,7 +74,7 @@ Wmist_pi_reg = 1 / (1+Wraz_pi_reg);
 
 % ПИД регулятор
 Wraz_pid_reg = W0 * W1 * W2 * W3_pid * W4 * W5
-Wzam_pid_reg = feedback(Wraz_pid_reg, 1)
+Wzam_pid_reg = feedback(Wraz_pid_reg, 1);
 
 % figure
 % title('ПХ замкнутой системы с ПИД-регулятором');
@@ -81,13 +84,6 @@ Wzam_pid_reg = feedback(Wraz_pid_reg, 1)
 % bode(Wraz_pid_reg);
 
 figure
-
-hold on
-    step(Wzam_pi_reg);
-    step(Wzam_pid_reg);
-    step(Wzam);
-    legend('pi', 'pid', 'zam')
-hold off
-
+step(Wzam_pid_reg)
 
 
